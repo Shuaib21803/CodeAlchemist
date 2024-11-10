@@ -1,4 +1,5 @@
 import click
+import asyncio
 import os
 from rich.console import Console
 from rich.panel import Panel
@@ -9,12 +10,12 @@ console = Console()
 @click.argument('notebook_path', type=click.Path(exists=True))
 @click.option('--output', '-o', default='deployment', help='Output directory for deployment files')
 def main(notebook_path: str, output: str):
-    """Convert a Jupyter notebook into a deployable API with frontend"""
+    """Convert a Jupyter notebook into a deployable API with frontend using Gemini"""
     
     try:
         console.print(Panel.fit(
             "🚀 Starting notebook conversion...",
-            title="ML Model Deployment Generator",
+            title="ML Model Deployment Generator (Gemini-powered)",
             border_style="blue"
         ))
         
@@ -22,9 +23,9 @@ def main(notebook_path: str, output: str):
         if not notebook_path.endswith('.ipynb'):
             raise click.BadParameter('Input file must be a Jupyter notebook (.ipynb)')
         
-        # Convert notebook
+        # Convert notebook using asyncio
         from notebook_converter import deploy_notebook
-        deploy_notebook(notebook_path, output)
+        asyncio.run(deploy_notebook(notebook_path, output))
         
         # Success message
         console.print(Panel.fit(

@@ -1,17 +1,20 @@
 import nbformat
 import os
 from typing import Dict, List, Optional
-import anthropic
+import google.generativeai as genai
 from dotenv import load_dotenv
 import json
 
-class AINotebookConverter:
-    """Converts Jupyter notebooks to deployable code using Claude"""
+class GeminiNotebookConverter:
+    """Converts Jupyter notebooks to deployable code using Google's Gemini API"""
     
     def __init__(self, notebook_path: str):
         load_dotenv()
         self.notebook_path = notebook_path
-        self.client = anthropic.Anthropic()
+        
+        # Configure Gemini API
+        genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
+        self.model = genai.GenerativeModel('gemini-pro')
         
     def read_notebook(self) -> str:
         """Read and extract code from notebook"""
@@ -26,10 +29,10 @@ class AINotebookConverter:
                 
         return '\n\n'.join(code_cells)
     
-    def generate_deployment_code(self, notebook_code: str) -> Dict[str, str]:
-        """Use Claude to analyze notebook and generate deployment code"""
+    async def generate_deployment_code(self, notebook_code: str) -> Dict[str, str]:
+        """Use Gemini to analyze notebook and generate deployment code"""
         
-        prompt = f"""As an AI expert in ML deployment, analyze this Jupyter notebook code and generate production-ready deployment files.
+        prompt = f"""You are an expert ML engineer. Analyze this Jupyter notebook code and generate production-ready deployment files.
         The notebook contains ML model code: 
 
         {notebook_code}
@@ -40,43 +43,47 @@ class AINotebookConverter:
         3. requirements.txt - All required packages
         4. README.md - Instructions for deployment
         
-        Return a JSON with keys 'model.py', 'api.py', 'requirements.txt', and 'README.md' containing the file contents.
-        
-        The code should:
-        - Be well-organized and documented
+        For each file, start with ### Filename ### and then provide the content.
+        Follow these guidelines:
+        - Code should be well-organized and documented
         - Include proper error handling
         - Follow best practices for ML deployment
         - Have appropriate API endpoints
         - Include logging and monitoring
         """
 
-        message = self.client.messages.create(
-            model="claude-3-sonnet-20240229",
-            max_tokens=4000,
-            temperature=0,
-            system="You are an expert ML engineer specializing in deploying ML models to production. Generate only valid Python code and configuration files.",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
-        )
+        response = await self.model.generate_content_async(prompt)
         
         try:
-            # Extract JSON from response
-            response_text = message.content[0].text
-            # Find JSON block
-            json_start = response_text.find('{')
-            json_end = response_text.rfind('}') + 1
-            json_str = response_text[json_start:json_end]
-            return json.loads(json_str)
+            # Parse response and extract files
+            content = response.text
+            files = {}
+            current_file = None
+            current_content = []
+            
+            for line in content.split('\n'):
+                if line.startswith('### ') and line.endswith(' ###'):
+                    # Save previous file if exists
+                    if current_file:
+                        files[current_file] = '\n'.join(current_content)
+                        current_content = []
+                    # Start new file
+                    current_file = line.strip('# ').lower()
+                else:
+                    current_content.append(line)
+                    
+            # Save last file
+            if current_file:
+                files[current_file] = '\n'.join(current_content)
+                
+            return files
+            
         except Exception as e:
             print(f"Error parsing response: {e}")
             return None
 
-    def generate_frontend(self) -> str:
-        """Generate React frontend code using Claude"""
+    async def generate_frontend(self) -> str:
+        """Generate React frontend code using Gemini"""
         
         prompt = """Generate a React frontend component for an ML model API with:
         1. File upload for input data
@@ -85,36 +92,24 @@ class AINotebookConverter:
         4. Loading states
         5. Clean UI using shadcn/ui components
         
-        Return only the React component code."""
+        Return only the React component code. Use Tailwind CSS for styling."""
 
-        message = self.client.messages.create(
-            model="claude-3-sonnet-20240229",
-            max_tokens=2000,
-            temperature=0,
-            system="You are an expert frontend developer. Generate only valid React code using shadcn/ui components.",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
-        )
-        
-        return message.content[0].text
+        response = await self.model.generate_content_async(prompt)
+        return response.text
 
-    def save_files(self, output_dir: str):
+    async def save_files(self, output_dir: str):
         """Generate and save all deployment files"""
         try:
             # Read notebook
             notebook_code = self.read_notebook()
             
             # Generate backend code
-            files = self.generate_deployment_code(notebook_code)
+            files = await self.generate_deployment_code(notebook_code)
             if not files:
                 raise Exception("Failed to generate deployment code")
             
             # Generate frontend code
-            frontend_code = self.generate_frontend()
+            frontend_code = await self.generate_frontend()
             files['frontend.jsx'] = frontend_code
             
             # Save all files
@@ -128,7 +123,7 @@ class AINotebookConverter:
         except Exception as e:
             print(f"Error generating deployment files: {e}")
 
-def deploy_notebook(notebook_path: str, output_dir: str = 'deployment'):
+async def deploy_notebook(notebook_path: str, output_dir: str = 'deployment'):
     """Helper function to convert and deploy a notebook"""
-    converter = AINotebookConverter(notebook_path)
-    converter.save_files(output_dir)
+    converter = GeminiNotebookConverter(notebook_path)
+    await converter.save_files(output_dir)
