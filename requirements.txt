@@ -3,3 +3,5 @@ python-dotenv
 nbformat 
 click 
 rich
+langchain
+langchain_ollama
