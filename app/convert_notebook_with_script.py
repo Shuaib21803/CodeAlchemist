@@ -13,11 +13,3 @@ def convert(notebook_path):
         f.write(script)
 
     print(f"Converted {notebook_path} to {output_path}")
-
-
-convert("notebook/2.ipynb")
-
-
-
-
-
