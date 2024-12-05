@@ -50,7 +50,7 @@ const CodeAlchemist = () => {
       <Card className="card">
         <CardHeader>
           <CardTitle className="head">
-            CodeAlchemist Workflow
+            CodeAlchemist
           </CardTitle>
         </CardHeader>
         <CardContent>
