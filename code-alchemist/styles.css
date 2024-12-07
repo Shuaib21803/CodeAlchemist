@@ -205,7 +205,7 @@ textarea {
   }
   
   .submit-btn:hover {
-    background: #010119;
+    background: #007bff;
     filter: brightness(120%);
   }
 
