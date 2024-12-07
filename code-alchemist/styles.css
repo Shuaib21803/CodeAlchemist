@@ -1,3 +1,4 @@
+/* #007bff */
 .screen{
   background: #007bff;
   top: 0;
@@ -204,7 +205,7 @@ textarea {
   }
   
   .submit-btn:hover {
-    background: #007bff;
+    background: #010119;
     filter: brightness(120%);
   }
 

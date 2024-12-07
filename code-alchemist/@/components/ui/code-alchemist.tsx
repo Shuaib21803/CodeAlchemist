@@ -60,7 +60,7 @@ const CodeAlchemist = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="card-content">
-            {/* Step 1: Select weights type */}
+            {/*Select weights type */}
             <div className="box">
               <label className="label">Select Weights Type</label>
               <div className="small-box">
@@ -80,7 +80,7 @@ const CodeAlchemist = () => {
               </div>
             </div>
 
-            {/* Step 2: User Inputs Section */}
+            {/* User Inputs Section */}
             <div className="column">
               {/* Jupyter File Upload */}
               <div className="box">
