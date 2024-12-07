@@ -56,7 +56,7 @@ const CodeAlchemist = () => {
       <Card className="card">
         <CardHeader>
           <CardTitle className="head">CodeAlchemist</CardTitle>
-          <CardDescription className="description">Transforming logic into deployable code.</CardDescription>
+          <CardDescription className="description">Transforming logic into deployable code</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="card-content">
