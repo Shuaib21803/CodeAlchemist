@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -53,6 +53,7 @@ const CodeAlchemist = () => {
       <Card className="card">
         <CardHeader>
           <CardTitle className="head">CodeAlchemist</CardTitle>
+          <CardDescription className="description">Transforming logic into deployable code.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="card-content">
