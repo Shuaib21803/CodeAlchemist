@@ -103,7 +103,6 @@ header {
 
   
   /* Select Input Styling */
-
 .select-trigger {
   background-color: #007bff; 
   color: white;             
@@ -189,7 +188,6 @@ textarea {
   }
   
   /*Submit Button*/
-
   .submit-btn {
     background: #007bff;
     color: white;

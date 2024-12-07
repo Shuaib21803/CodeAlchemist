@@ -4,6 +4,7 @@ import "./globals.css";
 
 // const GeistMonoVF = localFont({
 //   src: "../../src/fonts/GeistMonoVF.woff",
+
 //   variable: "--font-geist-sans",
 //   weight: "100 900",
 // });

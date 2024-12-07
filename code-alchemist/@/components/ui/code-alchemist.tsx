@@ -32,7 +32,6 @@ const CodeAlchemist = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!weightType || !jupyterFile || !modelWeights || !modelDetails) {
       setError("Please fill in all required fields");
       return;
@@ -44,6 +43,7 @@ const CodeAlchemist = () => {
     // Simulate processing
     setTimeout(() => {
       setLoading(false);
+
       alert("Successfully transformed with CodeAlchemist!");
       // Reset form or handle success logic
     }, 2000);
@@ -85,6 +85,7 @@ const CodeAlchemist = () => {
               {/* Jupyter File Upload */}
               <div className="box">
                 <label className="label">Jupyter Notebook File</label>
+
                 <div className="flex items-center space-x-2">
                   <Input
                     type="file"
@@ -146,8 +147,8 @@ const CodeAlchemist = () => {
       </Card>
     </div>
     </div>
+
   );
 };
 
 export default CodeAlchemist;
-
