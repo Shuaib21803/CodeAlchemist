@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
@@ -8,10 +9,10 @@ import { Textarea } from "../ui/textarea";
 import { Alert, AlertDescription } from "../ui/alert";
 import { Loader2, Upload } from "lucide-react";
 
-import "../../../styles.css"
+import "../../../styles.css";
 
 const CodeAlchemist = () => {
-  const [weightType, setWeightType] = useState("");
+  const [weightType, setWeightType] = useState<string | undefined>();
   const [jupyterFile, setJupyterFile] = useState<File | null>(null);
   const [modelWeights, setModelWeights] = useState("");
   const [modelDetails, setModelDetails] = useState("");
@@ -20,8 +21,9 @@ const CodeAlchemist = () => {
 
   const handleJupyterUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.name.endsWith('.ipynb')) {
+    if (file && file.name.endsWith(".ipynb")) {
       setJupyterFile(file);
+      setError(null); // Clear error if a valid file is uploaded
     } else {
       setError("Please upload a valid Jupyter notebook file (.ipynb)");
     }
@@ -29,7 +31,7 @@ const CodeAlchemist = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!weightType || !jupyterFile || !modelWeights || !modelDetails) {
       setError("Please fill in all required fields");
       return;
@@ -41,7 +43,8 @@ const CodeAlchemist = () => {
     // Simulate processing
     setTimeout(() => {
       setLoading(false);
-      // Add success handling here
+      alert("Successfully transformed with CodeAlchemist!");
+      // Reset form or handle success logic
     }, 2000);
   };
 
@@ -49,43 +52,35 @@ const CodeAlchemist = () => {
     <div className="parent-container">
       <Card className="card">
         <CardHeader>
-          <CardTitle className="head">
-            CodeAlchemist
-          </CardTitle>
+          <CardTitle className="head">CodeAlchemist</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="card-content">
             {/* Step 1: Select weights type */}
-          <div className="box">
-              <label className="label">
-                Select Weights Type
-              </label>
-
-              <div className="small-box" >
-              <Select
-                value={weightType}
-                onValueChange={setWeightType}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose weights type..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pytorch">PyTorch Weights</SelectItem>
-                  <SelectItem value="tensorflow">TensorFlow Weights</SelectItem>
-                  <SelectItem value="onnx">ONNX Weights</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="box">
+              <label className="label">Select Weights Type</label>
+              <div className="small-box">
+                <Select
+                  value={weightType}
+                  onValueChange={setWeightType}
+                >
+                  <SelectTrigger className="select-trigger">
+                    <SelectValue placeholder="Choose weights type..." />
+                  </SelectTrigger>
+                  <SelectContent className="select-content">
+                    <SelectItem value="pytorch" className="select-item">PyTorch Weights</SelectItem>
+                    <SelectItem value="tensorflow" className="select-item">TensorFlow Weights</SelectItem>
+                    <SelectItem value="onnx" className="select-item">ONNX Weights</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-          </div>
 
             {/* Step 2: User Inputs Section */}
             <div className="column">
-              
               {/* Jupyter File Upload */}
               <div className="box">
-                <label className="label">
-                  Jupyter Notebook File
-                </label>
+                <label className="label">Jupyter Notebook File</label>
                 <div className="flex items-center space-x-2">
                   <Input
                     type="file"
@@ -93,15 +88,13 @@ const CodeAlchemist = () => {
                     onChange={handleJupyterUpload}
                     className="flex-1"
                   />
-                  <Upload className="h-5 w-5 text-red-400" />
+                  <Upload className="h-5 w-5 text-blue-500" />
                 </div>
               </div>
 
               {/* Model Weights Input */}
               <div className="box">
-                <label className="label">
-                  Model Weights
-                </label>
+                <label className="label">Model Weights</label>
                 <Textarea
                   placeholder="Enter model weights configuration..."
                   value={modelWeights}
@@ -112,9 +105,7 @@ const CodeAlchemist = () => {
 
               {/* Model Details Input */}
               <div className="box">
-                <label className="label">
-                  Model Details
-                </label>
+                <label className="label">Model Details</label>
                 <Textarea
                   placeholder="Enter model details and parameters..."
                   value={modelDetails}
@@ -141,6 +132,7 @@ const CodeAlchemist = () => {
             </Button>
           </form>
 
+          {/* Error Message */}
           {error && (
             <Alert variant="destructive" className="alert">
               <AlertDescription>{error}</AlertDescription>
@@ -153,3 +145,4 @@ const CodeAlchemist = () => {
 };
 
 export default CodeAlchemist;
+
