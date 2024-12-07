@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Header from "../ui/header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -49,6 +50,8 @@ const CodeAlchemist = () => {
   };
 
   return (
+    <div className="screen">
+      <Header />
     <div className="parent-container">
       <Card className="card">
         <CardHeader>
@@ -141,6 +144,7 @@ const CodeAlchemist = () => {
           )}
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 };
