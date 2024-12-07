@@ -24,7 +24,7 @@ def main(notebook_path: str, output: str):
             raise click.BadParameter('Input file must be a Jupyter notebook (.ipynb)')
         
         # Convert notebook using asyncio
-        from notebook_converter import deploy_notebook
+        from main import deploy_notebook
         asyncio.run(deploy_notebook(notebook_path, output))
         
         # Success message
