@@ -15,7 +15,7 @@ class GeminiNotebookConverter:
         self.notebook_path = notebook_path
         
         # Configure Gemini API
-        genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
+        genai.configure(api_key="AIzaSyAdoLkx_0B-lBlkvTPSPT5ubw-pn2B7jPE")
         self.model = genai.GenerativeModel('gemini-pro')
         
     def convert_notebook(self) -> str:
@@ -29,6 +29,21 @@ class GeminiNotebookConverter:
         with open(script_path, 'r', encoding='utf-8') as f:
             return f.read()
 
+    async def save_files(self, output_dir: str):
+        """Generate and save all deployment files"""
+        try:
+            # Convert notebook to Python and get deployment files
+            files = await self.generate_deployment_code(output_dir)
+            
+            if not files:
+                raise Exception("Failed to generate deployment code")
+            
+            print(f"Successfully generated deployment files in {output_dir}")
+            return files
+            
+        except Exception as e:
+            print(f"Error generating deployment files: {e}")
+            raise
     async def generate_deployment_code(self, output_dir: str) -> Dict[str, str]:
         """
         Convert notebook to Python script, read the script, 
@@ -148,5 +163,9 @@ class GeminiNotebookConverter:
 
 async def deploy_notebook(notebook_path: str, output_dir: str = 'deployment'):
     """Helper function to convert and deploy a notebook"""
-    converter = GeminiNotebookConverter(notebook_path)
-    await converter.save_files(output_dir)
+    try:
+        converter = GeminiNotebookConverter(notebook_path)
+        return await converter.save_files(output_dir)
+    except Exception as e:
+        print(f"Error in deploy_notebook: {e}")
+        raise
