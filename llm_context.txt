@@ -1,0 +1,359 @@
+=== TRAINING DATA ANALYSIS ===
+Training Dataset Shape: (140700, 20)
+
+Dataframe Info:
+None
+
+Descriptive Statistics:
+                  id            Age  Academic Pressure  Work Pressure          CGPA  Study Satisfaction  Job Satisfaction  Work/Study Hours  Financial Stress     Depression
+count  140700.000000  140700.000000       27897.000000  112782.000000  27898.000000        27897.000000     112790.000000     140700.000000     140696.000000  140700.000000
+mean    70349.500000      40.388621           3.142273       2.998998      7.658636            2.944940          2.974404          6.252679          2.988983       0.181713
+std     40616.735775      12.384099           1.380457       1.405771      1.464466            1.360197          1.416078          3.853615          1.413633       0.385609
+min         0.000000      18.000000           1.000000       1.000000      5.030000            1.000000          1.000000          0.000000          1.000000       0.000000
+25%     35174.750000      29.000000           2.000000       2.000000      6.290000            2.000000          2.000000          3.000000          2.000000       0.000000
+50%     70349.500000      42.000000           3.000000       3.000000      7.770000            3.000000          3.000000          6.000000          3.000000       0.000000
+75%    105524.250000      51.000000           4.000000       4.000000      8.920000            4.000000          4.000000         10.000000          4.000000       0.000000
+max    140699.000000      60.000000           5.000000       5.000000     10.000000            5.000000          5.000000         12.000000          5.000000       1.000000
+
+Missing Values:
+id                                            0
+Name                                          0
+Gender                                        0
+Age                                           0
+City                                          0
+Working Professional or Student               0
+Profession                                36630
+Academic Pressure                        112803
+Work Pressure                             27918
+CGPA                                     112802
+Study Satisfaction                       112803
+Job Satisfaction                          27910
+Sleep Duration                                0
+Dietary Habits                                4
+Degree                                        2
+Have you ever had suicidal thoughts ?         0
+Work/Study Hours                              0
+Financial Stress                              4
+Family History of Mental Illness              0
+Depression                                    0
+
+Data Types:
+id                                         int64
+Name                                      object
+Gender                                    object
+Age                                      float64
+City                                      object
+Working Professional or Student           object
+Profession                                object
+Academic Pressure                        float64
+Work Pressure                            float64
+CGPA                                     float64
+Study Satisfaction                       float64
+Job Satisfaction                         float64
+Sleep Duration                            object
+Dietary Habits                            object
+Degree                                    object
+Have you ever had suicidal thoughts ?     object
+Work/Study Hours                         float64
+Financial Stress                         float64
+Family History of Mental Illness          object
+Depression                                 int64
+
+=== TEST DATA ANALYSIS ===
+Test Dataset Shape: (93800, 19)
+
+Dataframe Info:
+None
+
+Descriptive Statistics:
+                  id           Age  Academic Pressure  Work Pressure          CGPA  Study Satisfaction  Job Satisfaction  Work/Study Hours  Financial Stress
+count   93800.000000  93800.000000       18767.000000   75022.000000  18766.000000        18767.000000       75026.00000      93800.000000      93800.000000
+mean   187599.500000     40.321685           3.158576       3.011797      7.674016            2.939522           2.96092          6.247335          2.978763
+std     27077.871962     12.393480           1.386666       1.403563      1.465056            1.374242           1.41071          3.858191          1.414604
+min    140700.000000     18.000000           1.000000       1.000000      5.030000            1.000000           1.00000          0.000000          1.000000
+25%    164149.750000     29.000000           2.000000       2.000000      6.330000            2.000000           2.00000          3.000000          2.000000
+50%    187599.500000     42.000000           3.000000       3.000000      7.800000            3.000000           3.00000          6.000000          3.000000
+75%    211049.250000     51.000000           4.000000       4.000000      8.940000            4.000000           4.00000         10.000000          4.000000
+max    234499.000000     60.000000           5.000000       5.000000     10.000000            5.000000           5.00000         12.000000          5.000000
+
+Missing Values:
+id                                           0
+Name                                         0
+Gender                                       0
+Age                                          0
+City                                         0
+Working Professional or Student              0
+Profession                               24632
+Academic Pressure                        75033
+Work Pressure                            18778
+CGPA                                     75034
+Study Satisfaction                       75033
+Job Satisfaction                         18774
+Sleep Duration                               0
+Dietary Habits                               5
+Degree                                       2
+Have you ever had suicidal thoughts ?        0
+Work/Study Hours                             0
+Financial Stress                             0
+Family History of Mental Illness             0
+
+Data Types:
+id                                         int64
+Name                                      object
+Gender                                    object
+Age                                      float64
+City                                      object
+Working Professional or Student           object
+Profession                                object
+Academic Pressure                        float64
+Work Pressure                            float64
+CGPA                                     float64
+Study Satisfaction                       float64
+Job Satisfaction                         float64
+Sleep Duration                            object
+Dietary Habits                            object
+Degree                                    object
+Have you ever had suicidal thoughts ?     object
+Work/Study Hours                         float64
+Financial Stress                         float64
+Family History of Mental Illness          object
+
+=== NOTEBOOK ANALYSIS ===
+Notebook Analysis:
+Total cells: 18
+Code cells: 17
+Markdown cells: 1
+
+Code Overview:
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+import pandas as pd
+df_train = pd.read_csv("../data/train.csv")
+df_test = pd.read_csv("../data/test.csv")
+df_train["Satisfaction in work life"] = df_train["Job Satisfaction"].combine_first(df_train['Study Satisfaction'])
+df_train["Pressure in work life"] = df_train["Work Pressure"].combine_first(df_train['Academic Pressure'])
+df_test["Satisfaction in work life"] = df_test["Job Satisfaction"].combine_first(df_test['Study Satisfaction'])
+df_test["Pressure in work life"] = df_test["Work Pressure"].combine_first(df_test['Academic Pressure'])
+df_train.drop(columns = ["Working Professional or Student","Job Satisfaction","Study Satisfaction", "Work Pressure", "Academic Pressure", "id","Name"], inplace = True)
+df_test.drop(columns = ["Working Professional or Student","Job Satisfaction","Study Satisfaction", "Work Pressure", "Academic Pressure"], inplace = True)
+df_train.head()
+df_column = df_train.columns
+for column in df_column:
+    if df_train[column].dtype in ["float64", "int64"]:
+        mean = df_train[column].mean()
+        df_train[column] = df_train[column].fillna(mean)
+df_train.head()
+df_train.ffill(inplace = True)
+df_train.head()
+df_train.isnull().any()
+df_column = df_test.columns
+for column in df_column:
+    if df_test[column].dtype in ["float64", "int64"]:
+        mean = df_test[column].mean()
+        df_test[column] = df_test[column].fillna(mean)
+df_train.head()
+df_test.ffill(inplace = True)
+df_test.head()
+string_columns = df_train.select_dtypes(include = ["object"]).columns
+labels_encoders = {}
+for column in string_columns:
+    le = LabelEncoder()
+    df_train[column] = le.fit_transform(df_train[column])
+    labels_encoders[column] = le
+df_train.head()
+df_test.head()
+# split feature and target
+# dataset class
+# train and val split
+# normalize
+# data loader
+# model
+import torch
+from torch import nn
+from torch.utils.data import Dataset, DataLoader
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+class MentalHealthDataset(Dataset):
+    def __init__(self,features,labels):
+        self.features=torch.FloatTensor(np.array(features))
+        self.labels=torch.LongTensor(np.array(labels))
+        
+    def __len__(self):
+        return len(self.labels)
+    
+    def __getitem__(self, index):
+        return self.features[index],self.labels[index]    
+class DepressionClassifier(nn.Module):
+    def __init__(self, input_size):
+        super(DepressionClassifier, self).__init__()
+        self.layers=nn.Sequential(
+            nn.Linear(input_size, 256),
+            nn.BatchNorm1d(256),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(256, 64),
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(64, 32),
+            nn.BatchNorm1d(32),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(32, 2)
+        )
+    def forward(self,x):
+        return self.layers(x)    
+def prepare_data(df,target_column="Depression",test_size=0.4,batch_size=32):
+    features=df.drop(columns=target_column)
+    labels=df[target_column]
+    
+    X_train,X_val,y_train,y_val=train_test_split(features,labels,test_size=test_size,random_state=42)
+    
+    sc=StandardScaler()
+    X_train_scaled=sc.fit_transform(X_train)
+    X_val_scaled=sc.transform(X_val)
+    
+    train_dataset=MentalHealthDataset(X_train_scaled,y_train)
+    val_dataset=MentalHealthDataset(X_val_scaled,y_val)
+    
+    train_loader=DataLoader(train_dataset,batch_size=batch_size,shuffle=True)
+    val_loader=DataLoader(val_dataset,batch_size=batch_size)
+    
+    return train_loader,val_loader,sc
+def train_model(model, train_loader, val_loader, criterion, optimizer, epochs=5, device='cuda'):
+    device = torch.device(device if torch.cuda.is_available() else 'cpu')
+    model = model.to(device)
+    
+    for epoch in range(epochs):
+        # Training phase
+        model.train()
+        train_loss = 0
+        train_correct = 0
+        train_total = 0
+        
+        for features, labels in train_loader:
+            features, labels = features.to(device), labels.to(device)
+            
+            # Forward pass
+            outputs = model(features)
+            loss = criterion(outputs, labels)
+            
+            # Backward pass and optimization
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            
+            # Calculate accuracy
+            _, predicted = torch.max(outputs.data, 1)
+            train_total += labels.size(0)
+            train_correct += (predicted == labels).sum().item()
+            train_loss += loss.item()
+        
+        # Validation phase
+        model.eval()
+        val_loss = 0
+        val_correct = 0
+        val_total = 0
+        
+        with torch.no_grad():
+            for features, labels in val_loader:
+                features, labels = features.to(device), labels.to(device)
+                outputs = model(features)
+                loss = criterion(outputs, labels)
+                
+                _, predicted = torch.max(outputs.data, 1)
+                val_total += labels.size(0)
+                val_correct += (predicted == labels).sum().item()
+                val_loss += loss.item()
+        
+        # Print epoch statistics
+        print(f'Epoch [{epoch+1}/{epochs}]')
+        print(f'Train Loss: {train_loss/len(train_loader):.4f}, Train Acc: {100*train_correct/train_total:.2f}%')
+        print(f'Val Loss: {val_loss/len(val_loader):.4f}, Val Acc: {100*val_correct/val_total:.2f}%\n')
+df=df_train
+train_loader,val_loader,sc=prepare_data(df)
+input_size=len(df.columns)-1
+model=DepressionClassifier(input_size)
+# Define loss function and optimizer
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.00001)
+
+# Train the model
+train_model(model, train_loader, val_loader, criterion, optimizer)
+torch.save(model.state_dict(), 'depression_classifier_weights.pth')
+print("Model weights saved to 'depression_classifier_weights.pth' ")
+
+Markdown Overview:
+# PyTorch MODEL Here's a structured analysis of the provided data science context, covering insights and challenges in three main sections: DataFrame Analysis, Code Analysis, and LLM Interpretation.
+
+---
+
+## DataFrame Analysis
+
+### Training Data Insights:
+- **Shape**: The training dataset contains 140,700 samples and 20 features.
+- **Descriptive Statistics**:
+  - Age: Mean ~ 40.39, with a range from 18 to 60.
+  - CGPA: Mean ~ 7.66, indicating a reasonable academic performance within the dataset.
+  - Most scores related to academic and work pressures (Academic Pressure and Work Pressure) have a mean near 3, which may suggest moderate levels.
+  - **Depression**: Binary outcome variable with values primarily '0' (not depressed) or '1' (depressed), indicating prevalence in the dataset.
+
+### Missing Values:
+- Significant missing values particularly in:
+  - Academic Pressure: 112,803 missing (80% of the data).
+  - CGPA: 112,802 missing.
+  - Study Satisfaction: 112,803 missing.
+  - Job Satisfaction: 27,910 missing.
+  
+- Other crucial but less impactful missing values appear in the Profession and Dietary Habits columns.
+
+### Test Data Insights:
+- **Shape**: Test dataset consists of 93,800 samples and 19 features, with one less feature than the training dataset.
+- **Descriptive Statistics**: Similar patterns with mean and standard deviations closely matching training data indicate a consistent dataset creation pipeline.
+- Notably, missing values in key metrics are present here as well.
+
+### Challenges:
+- High volume of missing values in critical columns, particularly Academic Pressure and CGPA, may hinder training and evaluation.
+- Discrepancy between the number of features in training and test datasets might require feature engineering alignment.
+
+---
+
+## Code Analysis
+
+### Code Overview:
+- Uses libraries such as `pandas`, `scikit-learn`, `torch`, and `matplotlib` for data handling, model training, and visualization.
+- **Data Preprocessing**:
+  - Employs `LabelEncoder` to convert categorical variables into numeric formats.
+  - Missing values are handled in a simplistic way by filling in mean values for numerical types and forward filling (`ffill()`) for categorical types, which might not always be appropriate.
+
+### Model Training:
+- Implements a PyTorch model that employs layers with dropout and batch normalization for improved generalization.
+- **Training procedure**:
+  - Includes both training and validation loops, and the model's performance is printed at each epoch, providing feedback on training progress.
+  
+### Challenges:
+- Handling of missing values may not suffice; imputation strategies should consider multivariate relationships, possibly using more sophisticated methods like KNN or regression-based methods.
+- The learning rate is set to a very low value (0.00001), which could extend the training time unnecessarily.
+- Code lacks comments and extensive markdown documentation for clarity.
+
+---
+
+## LLM Interpretation
+
+### General Insights:
+- Data represents a mental health study which aims to classify depression based on various pressures and satisfaction levels experienced by individuals, potentially leading to insights on the impact of academic and work-related stressors on mental health.
+
+### Potential Insights:
+- Features like Work Pressure, Academic Pressure, and various satisfaction metrics can lead to actionable insights in fields like educational policy, workplace environments, and mental health interventions.
+- Classification results can inform targeted support services for individuals at risk of depression based on their professional or academic pressure levels.
+
+### Challenges in Context:
+- Misinterpretation of high missing values could lead to bias; without careful consideration of the implications of imputation, the model's predictions may not generalize well.
+- Insights drawn around societal factors impacting mental health need careful contextual interpretation to avoid oversimplifying complex interrelations.
+
+---
+
+This structured analysis provides a detailed breakdown of key insights and challenges within the dataset and the associated code, allowing stakeholders to understand potential areas for improvement as well as valuable insights that can stem from the analysis.

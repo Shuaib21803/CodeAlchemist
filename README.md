@@ -55,10 +55,4 @@ python app/main.py path/to/your/notebook.ipynb
 - `notebook/`: Directory for storing Jupyter notebooks
 - `requirements.txt`: List of Python dependencies
 
-## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License.
