@@ -56,7 +56,7 @@ python app/main.py path/to/your/notebook.ipynb
 - `requirements.txt`: List of Python dependencies
 
 ## Contributing
-
+given a jupyter notebook convert it into python code using nbconvert
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
