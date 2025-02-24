@@ -1,58 +1,88 @@
-# CodeAlchemist: Jupyter Notebook to Deployment Converter
+# CodeAlchemist: Sklearn Model Deployment and Sharing Platform
 
-CodeAlchemist is a tool that converts Jupyter notebooks into deployment-ready code using Google's Gemini API. It generates production-ready Python scripts, FastAPI endpoints, and necessary deployment files from your machine learning notebooks.
+CodeAlchemist is a platform that allows users to deploy and share sklearn models easily. It provides a simple way to serve machine learning models and generate shareable links for testing.
 
 ## Features
 
-- Converts Jupyter notebooks to Python scripts
-- Generates deployment files including:
-  - `model.py`: Clean model definition and utilities
-  - `api.py`: FastAPI API with proper endpoints
-  - `requirements.txt`: All required packages
-  - README.md: Instructions for deployment
-- Uses Google's Gemini API for intelligent code generation
-- Handles error logging and monitoring
+- Deploy sklearn models with ease
+- Generate shareable links for deployed models
+- Allow friends to test models through a user-friendly interface
+- Support for various sklearn model types
+- Example implementation using a Random Forest Regressor for advertising sales prediction
 
-## Requirements
+## Project Structure
 
-- Python 3.7+
-- Google Cloud account with Gemini API access
+- `01_Model_Preparation/`: Contains example notebook for model preparation
+- `02_Prediction_API/`: Houses the Flask-based API for serving predictions
+- `code-alchemist/`: Frontend code for the web interface
+- `requirements.txt`: List of Python dependencies
+- `streamlit_local.py`: Local Streamlit interface for quick testing
 
-## Installation
+## Setup and Installation
 
 1. Clone the repository:
-git clone https://github.com/your-username/CodeAlchemist.git cd CodeAlchemist
+   ```
+   git clone https://github.com/your-username/CodeAlchemist.git
+   cd CodeAlchemist
+   ```
 
+2. Create a virtual environment (recommended):
+   ```
+   python -m venv venv
+   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   ```
 
-2. Install the required packages:
-pip install -r requirements.txt
-
-
-3. Set up your Google Cloud credentials and Gemini API key:
-- Create a `.env` file in the project root
-- Add your Gemini API key: `GOOGLE_API_KEY=your_api_key_here`
+3. Install the required packages:
+   ```
+   pip install -r requirements.txt
+   ```
 
 ## Usage
 
-To convert a Jupyter notebook and generate deployment files:
+### Deploying a Model
 
-1. Place your Jupyter notebook in the project directory or a subdirectory.
+1. Prepare your sklearn model and save it using joblib or pickle.
+2. Place your model file in the `02_Prediction_API/models/` directory.
+3. Update the `02_Prediction_API/Prediction_API.py` file to load and use your model.
+4. Start the Flask server:
+   ```
+   python -m flask --app 02_Prediction_API/Prediction_API run
+   ```
 
-2. Run the following command:
-python app/main.py path/to/your/notebook.ipynb
+### Sharing Your Model
 
+Once your model is deployed, you can share the API endpoint with others. They can use this endpoint to make predictions using your model.
 
-3. The generated deployment files will be saved in a `deployment` directory by default.
+### Making Predictions
 
-## File Structure
+To make predictions using the API:
 
-- `app/`: Contains the main application code
-- `main.py`: Entry point for the application
-- `convert_notebook_with_script.py`: Script for converting notebooks to Python files
-- `deploy_cli.py`: CLI interface for deployment (if available)
-- `code-alchemist/`: Frontend code (React components, if implemented)
-- `data/`: Directory for storing input data (CSV files)
-- `notebook/`: Directory for storing Jupyter notebooks
-- `requirements.txt`: List of Python dependencies
+1. Send a POST request to `http://your-server-address/api` with JSON data in the format required by your model.
+2. The API will return the prediction results.
 
+Example using curl:
+```
+curl -X POST http://localhost:5000/api \
+     -H "Content-Type: application/json" \
+     -d '[{"feature1": value1, "feature2": value2, ...}]'
+```
+
+### Local Testing with Streamlit
+
+For quick local testing, you can use the Streamlit interface:
+
+1. Run the Streamlit app:
+   ```
+   streamlit run streamlit_local.py
+   ```
+2. Open your web browser and go to the URL provided by Streamlit (usually `http://localhost:8501`).
+3. Input the required features and click "Predict" to see the model's output.
+
+## Customization
+
+To use CodeAlchemist with your own sklearn model:
+
+1. Replace the example model in `01_Model_Preparation/` with your own model preparation notebook.
+2. Update the `02_Prediction_API/Prediction_API.py` to load and use your specific model.
+3. Modify the Streamlit interface in `streamlit_local.py` to match your model's input requirements.
 
