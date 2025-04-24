@@ -29,7 +29,7 @@ CodeAlchemist is a platform that allows users to deploy and share sklearn models
 2. Create a virtual environment (recommended):
    ```
    python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   source venv/bin/activate  # On Windows, use `venv Scripts activate`
    ```
 
 3. Install the required packages:
