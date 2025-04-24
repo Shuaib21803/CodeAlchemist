@@ -271,36 +271,85 @@ class DataContextBuilder:
         # Generate Flask API code using OpenAI
         try:
             response = client.chat.completions.create(
-                model="gpt-4o",  # Using a more capable model for code generation
+                model="gpt-4.1",  # Using a more capable model for code generation
                 messages=[
                     {"role": "system", "content": """You are an expert Flask API developer specialized in serving machine learning models. 
-                    Create complete, production-ready Flask code based on the context information.
-                    Your code must include proper error handling, input validation, and documentation.
-                    Ensure the API accepts JSON input correctly formatted for the model.
-                    Include HTML templates for a simple user interface if needed.
-                    Include proper types and handle potential errors."""},
-                    {"role": "user", "content": f"""Using this context information, create a complete Flask API to serve the described model:
+                Create complete, production-ready Flask code based on the context information.
+                Your code must include proper error handling, input validation, and documentation.
+                Ensure the API accepts both JSON input and form submissions with proper handling for each case.
+                Include HTML templates for a simple user interface.
+                Use specific code structure for the predict route that handles both JSON and form data."""},
+                {"role": "user", "content": f"""Using this context information, create a complete Flask API to serve the described model:
+                
+                {context}
+                
+                Provide the following in your response as a JSON object with these keys:
+                1. 'app_code': The main Flask application code (Absolute imports, don't use relative imports)
+                2. 'templates': A dictionary mapping template names to their HTML content
+                3. 'static_files': A dictionary mapping static file names to their content
+                4. 'requirements': A list of required Python packages
+                5. 'api_documentation': Markdown documentation describing how to use the API
+                
+                IMPORTANT REQUIREMENTS:
+                
+                1. Load model files, like this:
+                   - Use `model = joblib.load('ml_model_api/model.pkl')` ## strict naming here
+                   - Use `model_columns = joblib.load('ml_model_api/model.pkl')` ## strict naming here
+                
+                2. Structure the predict route to handle BOTH JSON API requests AND form submissions like this:
+                @app.route('/predict', methods=['POST'])
+                def predict() -> Any:
+  
+                    Handle prediction requests from JSON data or form submission.
+                    :return: JSON or rendered template with predicted sales
                     
-                    {context}
+                    # Handle JSON requests (API)
+                    if request.is_json:
+                        data = request.get_json()
+                        
+                        # Validate and parse inputs
+                        try:
+                            # Input validation code here
+                        except (TypeError, ValueError):
+                            return jsonify, 400
+                        
+                        # Perform prediction with validated inputs
+                        try:
+                            # Prediction code here
+                        except Exception as e:
+                            return jsonify
+                        
+                        return jsonify
                     
-                    Provide the following in your response as a JSON object with these keys:
-                    1. 'app_code': The main Flask application code (Absolute imports, don't use relative imports)
-                    2. 'templates': A dictionary mapping template names to their HTML content
-                    3. 'static_files': A dictionary mapping static file names to their content
-                    4. 'requirements': A list of required Python packages
-                    5. 'api_documentation': Markdown documentation describing how to use the API
-                    
-                    IMPORTANT: Your API should accept JSON input with the proper format needed for the model. Also create a simple web interface for testing the model.
-                    
-                    Important considerations:
-                    - The model will be loaded from a file called 'model.pkl'
-                    - If the model has feature names, they will be in 'model_columns.pkl'
-                    - The API must support both programmatic access and browser-based testing
-                    - Include detailed comments to explain how the code works
-                    - Ensure strong error handling and input validation
-                    """}
-                ]
-            )
+                    # Handle form submissions (Web UI)
+                    else:
+                        data = request.form
+                        
+                        # Validate and parse inputs
+                        try:
+                            # Input validation code here
+                        except (TypeError, ValueError):
+                            return render_template('index.html', error='Invalid input values')
+                        
+                        # Perform prediction with validated inputs
+                        try:
+                            # Prediction code here
+                        except Exception as e:
+                            
+                        
+                        # Return the template with the prediction result
+                        return render_template('index.html', prediction_result=prediction)
+
+                
+                3. Create a user-friendly web interface in the index.html template that:
+                   - Has a clear form with labeled inputs for all required features
+                   - Shows prediction results and any errors on the same page
+                   - Uses basic CSS for formatting (keep it simple)
+                
+                4. Include proper handling for both API usage (with curl/Postman) and browser form usage
+                """}
+            ]
+        )
             
             # Parse the response as JSON
             content = response.choices[0].message.content
